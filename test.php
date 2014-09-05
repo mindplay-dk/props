@@ -80,7 +80,13 @@ class AccountTable extends Table
 header('Content-type: text/plain');
 
 if (coverage()) {
-    coverage('test')->filter()->addDirectoryToWhitelist(__DIR__ . '/src');
+    $filter = coverage('test')->filter();
+
+    $filter->addDirectoryToWhitelist(__DIR__ . '/src');
+
+    // exclude interfaces:
+    $filter->addFileToBlacklist(__DIR__ . '/src/NameAware.php');
+    $filter->addFileToBlacklist(__DIR__ . '/src/OwnerAware.php');
 }
 
 test(
