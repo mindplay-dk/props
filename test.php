@@ -52,16 +52,13 @@ class IntColumn extends Column
     }
 }
 
-abstract class Table extends PropertySet
-{}
-
 /**
  * @property IntColumn $id
  * @property VarCharColumn $first_name
  * @property VarCharColumn $last_name
  * @property IntColumn $balance
  */
-class AccountTable extends Table
+class AccountTable extends PropertySet
 {
     protected function init()
     {
@@ -82,11 +79,8 @@ header('Content-type: text/plain');
 if (coverage()) {
     $filter = coverage('test')->filter();
 
-    $filter->addDirectoryToWhitelist(__DIR__ . '/src');
-
-    // exclude interfaces:
-    $filter->addFileToBlacklist(__DIR__ . '/src/NameAware.php');
-    $filter->addFileToBlacklist(__DIR__ . '/src/OwnerAware.php');
+    $filter->addFileToWhitelist(__DIR__ . '/src/Property.php');
+    $filter->addFileToWhitelist(__DIR__ . '/src/PropertySet.php');
 }
 
 test(
