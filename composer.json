@@ -14,7 +14,7 @@
         "mindplay/filereflection": "1.*"
     },
     "require-dev": {
-        "phpunit/php-code-coverage": "3.0.*@dev"
+        "phpunit/php-code-coverage": "2.*@dev"
     },
     "autoload": {
         "psr-4": {
