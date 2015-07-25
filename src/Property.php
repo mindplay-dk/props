@@ -7,30 +7,24 @@ namespace mindplay\props;
  *
  * @see PropertySet
  */
-class Property implements NameAware, OwnerAware
+abstract class Property implements NameAware, OwnerAware
 {
     /**
      * @var string
      */
-    protected $_name;
+    protected $property_name;
 
     /**
      * @var object
      */
-    protected $_owner;
-
-    /**
-     * Empty constructor
-     */
-    public function __construct()
-    {}
+    protected $property_owner;
 
     /**
      * @return string column name
      */
     public function getPropertyName()
     {
-        return $this->_name;
+        return $this->property_name;
     }
 
     /**
@@ -38,9 +32,9 @@ class Property implements NameAware, OwnerAware
      *
      * @return void
      */
-    function setPropertyName($value)
+    public function setPropertyName($value)
     {
-        $this->_name = $value;
+        $this->property_name = $value;
     }
 
     /**
@@ -48,7 +42,7 @@ class Property implements NameAware, OwnerAware
      */
     public function getPropertyOwner()
     {
-        return $this->_owner;
+        return $this->property_owner;
     }
 
     /**
@@ -56,8 +50,8 @@ class Property implements NameAware, OwnerAware
      *
      * @return void
      */
-    function setPropertyOwner($value)
+    public function setPropertyOwner($value)
     {
-        $this->_owner = $value;
+        $this->property_owner = $value;
     }
 }

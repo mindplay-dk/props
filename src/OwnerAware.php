@@ -11,11 +11,6 @@ namespace mindplay\props;
 interface OwnerAware
 {
     /**
-     * Properties must implement an empty constructor
-     */
-    function __construct();
-
-    /**
      * @return object
      */
     function getPropertyOwner();

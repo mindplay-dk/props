@@ -11,11 +11,6 @@ namespace mindplay\props;
 interface NameAware
 {
     /**
-     * Properties must implement an empty constructor
-     */
-    function __construct();
-
-    /**
      * @return string
      */
     function getPropertyName();

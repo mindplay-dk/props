@@ -28,21 +28,16 @@ abstract class PropertySet extends Property
     /**
      * @var Property[] map where property-name => Property instance
      */
-    protected $_props;
-
-    /**
-     * @var bool true, if the init() method has been called
-     */
-    protected $_initialized = false;
+    private $properties;
 
     /**
      * @return Property[] map where property-name => Property instance
      */
     public function getProperties()
     {
-        $this->_init();
+        $this->initProperties();
 
-        return $this->_props;
+        return $this->properties;
     }
 
     /**
@@ -50,15 +45,11 @@ abstract class PropertySet extends Property
      *
      * @return void
      */
-    final protected function _init()
+    final protected function initProperties()
     {
-        if ($this->_initialized) {
-            return; // already initialized
+        if ($this->properties === null) {
+            $this->properties = $this->createProperties();
         }
-
-        $this->_props = $this->createProperties();
-
-        $this->_initialized = true;
     }
 
     /**
@@ -66,7 +57,7 @@ abstract class PropertySet extends Property
      */
     protected function init()
     {
-        $this->_init();
+        $this->initProperties();
     }
 
     /**
@@ -82,7 +73,7 @@ abstract class PropertySet extends Property
         $file = new ReflectionFile($class->getFileName());
 
         if (! $class->isSubclassOf(__NAMESPACE__ . '\\PropertySet')) {
-            throw new RuntimeException('class ' . get_class($this) . ' is not a descendant of PropertySet');
+            throw new RuntimeException('class ' . get_class($this) . ' is not a subclass of PropertySet');
         }
 
         if (preg_match_all(self::PROPERTY_PATTERN, $class->getDocComment(), $matches) === 0) {
@@ -95,37 +86,48 @@ abstract class PropertySet extends Property
             $name = $matches[2][$i];
             $type = substr($file->resolveName($matches[1][$i]), 1);
 
-            $prop = new $type();
-
-            if ($prop instanceof NameAware) {
-                $prop->setPropertyName($name);
-            }
-
-            if ($prop instanceof OwnerAware) {
-                $prop->setPropertyOwner($this);
-            }
-
-            $props[$name] = $prop;
+            $props[$name] = $this->createProperty($name, $type);
         }
 
         return $props;
     }
 
     /**
-     * @hidden
+     * @ignore
      */
     public function __get($name)
     {
-        $this->_init();
+        $this->initProperties();
 
-        return $this->_props[$name];
+        return $this->properties[$name];
     }
 
     /**
-     * @hidden
+     * @ignore
      */
     public function __set($name, $value)
     {
         throw new RuntimeException('properties of ' . get_class($this) . ' are read-only');
+    }
+
+    /**
+     * @param string $name property name
+     * @param string $type fully-qualified class name
+     *
+     * @return object property object
+     */
+    protected function createProperty($name, $type)
+    {
+        $prop = new $type();
+
+        if ($prop instanceof NameAware) {
+            $prop->setPropertyName($name);
+        }
+
+        if ($prop instanceof OwnerAware) {
+            $prop->setPropertyOwner($this);
+        }
+
+        return $prop;
     }
 }
